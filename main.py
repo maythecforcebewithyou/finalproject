@@ -1,35 +1,32 @@
-
-
 #complete CAPITALIZED sections
 
-#AUTHOR: audi, olivia, sydney
-#DATE: 5/23/2022
+#AUTHOR: 
+#DATE:
 
 #import libraries
 import time
-import os
+#import os
 import board
 import busio
 import adafruit_bno055
-#from git import Repo
+from git import Repo
 from picamera import PiCamera
-
-import numpy as np
-import cv2 as cv
-print (cv2.__version__)
-
 
 #setup imu and camera
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bno055.BNO055_I2C(i2c)
 camera = PiCamera()
 
-"""
+#import numpy as np
+#import cv2 as cv
+#print (cv2.__version__)
+
+
 #bonus: function for uploading image to Github
 def git_push():
     try:
-        repo = Repo('/home/pi/FlatSatChallenge') #PATH TO YOUR GITHUB REPO
-        repo.git.add('folder path') #PATH TO YOUR IMAGES FOLDER WITHIN YOUR GITHUB REPO
+        repo = Repo('/home/pi/Documents/finalproject/.git/') #PATH TO YOUR GITHUB REPO
+        repo.git.add('/home/pi/Documents/finalproject/pictures') #PATH TO YOUR IMAGES FOLDER WITHIN YOUR GITHUB REPO
         repo.index.commit('New Photo')
         print('made the commit')
         origin = repo.remote('origin')
@@ -38,13 +35,14 @@ def git_push():
         print('pushed changes')
     except:
         print('Couldn\'t upload to git')
-"""
+
 
     
 #SET THRESHOLD
 threshold = .5
 
 timeStamp = -1
+ready = True
 #read acceleration
 while True:
     accelX, accelY, accelZ = sensor.acceleration
@@ -52,8 +50,10 @@ while True:
     if timeStamp % 100 == 0:
         print(f"accelX: {accelX}, accelY: {accelY}, accelZ: {accelZ}")
     #CHECK IF READINGS ARE ABOVE THRESHOLD
-
-    if accelX > threshold or accelY > threshold or accelZ > threshold:
+    if timeStamp % 1000000 == 0:
+        ready = True
+    if accelX > threshold or accelY > threshold or accelZ > threshold and ready:
+        ready = False
         #print("accelX>threshold")
         
         #PAUSE
@@ -63,9 +63,11 @@ while True:
         
         if name:
             t = time.strftime("_%H%M%S")      # current time string
-            imgname = ('/home/pi/cforce-final/%s%s.jpg' % (name,t)) #change directory to your folder
+            imgname = ('/home/pi/Documents/finalproject/pictures/%s%s.jpg' % (name,t)) #change directory to your folder
             camera.capture(imgname)
             #<YOUR CODE GOES HERE>#
             
-    
+    if timeStamp % 1000000000 == 0:
+        git_push()
+
     #PAUSE
