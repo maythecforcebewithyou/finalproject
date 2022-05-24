@@ -30,7 +30,11 @@ def git_push():
         username = "maythecforcebewithyou@gmail.com"
         password = "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"
         remote = f"https://{username}:{password}@github.com/maythecforcebewithyou/finalproject.git"
-        print('a')
+        print(remote)
+        #empty_repo = git.Repo.init(os.path.join(rw_dir, 'empty'))
+        #origin = empty_repo.create_remote('origin', repo.remotes.origin.url)
+        #origin.fetch()
+        #empty_repo.create_head('master', origin.refs.master).set_tracking_branch(origin.refs.master).checkout()
         #Repo.clone_from(remote, full_local_path)
         print('b')
 
@@ -40,9 +44,12 @@ def git_push():
         print('b')
         repo.index.commit('New Photo')
         print('made the commit')
-        origin = repo.remote('origin')
+        origin = repo.remote(name = 'origin')
         print('added remote')
-        origin.push()
+        assert origin.exists()
+        print("existence confirmed")
+        origin.push().raise_if_error()
+        #repo.git.push("origin", master)
         print('pushed changes')
     except:
         print('Couldn\'t upload to git')
