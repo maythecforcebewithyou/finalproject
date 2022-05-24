@@ -1,7 +1,7 @@
 #complete CAPITALIZED sections
 
-#AUTHOR: 
-#DATE:
+#AUTHOR: audi + sydney
+#DATE:5/23
 
 #import libraries
 import time
@@ -25,8 +25,19 @@ camera = PiCamera()
 #bonus: function for uploading image to Github
 def git_push():
     try:
-        repo = Repo('/home/pi/Documents/finalproject/.git/') #PATH TO YOUR GITHUB REPO
+#        repo = Repo('/home/pi/Documents/finalproject/.git/') #PATH TO YOUR GITHUB REPO
+        full_local_path = "/home/pi/Documents/finalproject/"
+        username = "maythecforcebewithyou@gmail.com"
+        password = "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"
+        remote = f"https://{username}:{password}@github.com/maythecforcebewithyou/finalproject.git"
+        print('a')
+        #Repo.clone_from(remote, full_local_path)
+        print('b')
+
+        repo = Repo(full_local_path)
+        print('a')
         repo.git.add('/home/pi/Documents/finalproject/pictures') #PATH TO YOUR IMAGES FOLDER WITHIN YOUR GITHUB REPO
+        print('b')
         repo.index.commit('New Photo')
         print('made the commit')
         origin = repo.remote('origin')
